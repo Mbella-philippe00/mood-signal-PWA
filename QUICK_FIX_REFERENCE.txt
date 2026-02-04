@@ -1,0 +1,41 @@
+QUICK FIX REFERENCE - MOOD SIGNAL DATABASE ERROR
+=================================================
+
+ERROR YOU GOT:
+"Could not find the table 'public.user_profiles' in the schema cache"
+
+WHY:
+Your database tables haven't been created yet.
+
+FIX (3 MINUTES):
+================
+
+1. Copy SQL script:
+   - Go to /init-db page on your app
+   OR
+   - Open /scripts/supabase-init.sql file
+
+2. Run in Supabase:
+   - Open Supabase Dashboard
+   - Click SQL Editor > New Query
+   - Paste the SQL script
+   - Click Run
+
+3. Initialize:
+   - Go to /init-db on your app
+   - Click "Continue (I've Run the SQL)"
+   - Done!
+
+Then you can sign up normally.
+
+
+NEXT TIME:
+If you get this error again, just visit /init-db
+
+The page will give you exact steps.
+
+
+VERIFICATION:
+Try to sign up after running the SQL.
+If it works → Done!
+If error → Check HOW_TO_INIT_DATABASE.txt for troubleshooting

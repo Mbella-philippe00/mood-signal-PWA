@@ -31,6 +31,18 @@ export async function POST(req: NextRequest) {
       });
 
     if (profileError) {
+      // Check if this is a missing table error
+      if (profileError.code === 'PGRST205') {
+        return NextResponse.json(
+          {
+            error: 'Database not initialized',
+            message:
+              'Your database tables have not been set up yet. Please initialize the database first.',
+            redirectUrl: '/init-db',
+          },
+          { status: 503 }
+        );
+      }
       return NextResponse.json({ error: profileError.message }, { status: 400 });
     }
 

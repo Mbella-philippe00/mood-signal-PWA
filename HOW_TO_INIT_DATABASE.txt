@@ -1,0 +1,117 @@
+MOOD SIGNAL - DATABASE SETUP GUIDE
+===================================
+
+PROBLEM: Database tables don't exist
+SOLUTION: Follow these 3 simple steps
+
+STEP 1: Get Your SQL Script
+===========================
+
+Option A: Visit http://localhost:3000/init-db (or your deployed URL)
+- You'll see a page with the SQL script
+- Click the "Copy" button to copy the entire script
+
+Option B: Open /scripts/supabase-init.sql file directly
+- Copy the entire content
+
+
+STEP 2: Run SQL in Supabase
+============================
+
+1. Go to https://supabase.com/dashboard
+2. Select your project
+3. Click "SQL Editor" in the left sidebar
+4. Click "New Query" button
+5. Paste the SQL script you copied
+6. Click the "Run" button (or Ctrl+Enter)
+7. Wait for it to complete (should see "Executed successfully")
+
+
+STEP 3: Initialize Your App Database
+=====================================
+
+Option A: Via Web UI
+- Visit http://localhost:3000/init-db
+- Click "Continue (I've Run the SQL)" button
+- It will verify and seed the data
+
+Option B: Via API
+- Send POST request to /api/setup
+- curl -X POST http://localhost:3000/api/setup
+
+
+VERIFY IT WORKED
+================
+
+1. Try to create an account at http://localhost:3000
+2. If you see the login page, it worked!
+3. If you get an error, you missed a step
+
+
+WHAT GETS CREATED
+==================
+
+Tables:
+- user_profiles (stores user info, linked to auth.users)
+- couples (links two users together)
+- mood_events (stores mood entries)
+- suggested_replies (pre-loaded empathetic responses)
+
+Security:
+- Row Level Security (RLS) on all tables
+- Users can only see/modify their own data
+- Couples can see their partner's moods
+
+Indexes:
+- Performance indexes on frequently searched fields
+
+
+TROUBLESHOOTING
+===============
+
+Error: "Could not find the table 'public.user_profiles'"
+- You haven't run the SQL script yet
+- Follow Step 2 above
+
+Error: "Database not initialized"
+- Run the SQL script in Supabase
+- Then visit /init-db to finalize
+
+Error: "permission denied"
+- Check that SUPABASE_SERVICE_ROLE_KEY is set correctly
+- Verify it's in your .env.local or Vercel environment
+
+Error: "Unique constraint violation"
+- The tables might already exist
+- Visit /init-db and it will seed the suggested_replies
+
+
+NEED HELP?
+===========
+
+1. Check that Supabase environment variables are set:
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
+   - SUPABASE_SERVICE_ROLE_KEY
+
+2. Check the SQL script has no errors
+   - Copy it line-by-line if you get errors
+
+3. Verify the SQL ran successfully in Supabase dashboard
+   - Check the "Logs" tab in Supabase SQL Editor
+
+
+QUICK REFERENCE
+===============
+
+Files you need:
+- /scripts/supabase-init.sql (the SQL to run)
+- http://localhost:3000/init-db (the setup page)
+- /DATABASE_SETUP_GUIDE.md (this file!)
+
+Environment variables needed:
+NEXT_PUBLIC_SUPABASE_URL = https://[xxx].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY = eyJ...
+SUPABASE_SERVICE_ROLE_KEY = eyJ...
+
+(Get these from Supabase Dashboard > Settings > API)

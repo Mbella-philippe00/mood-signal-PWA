@@ -24,7 +24,15 @@ export function LoginScreen({ onLogin }: { onLogin: () => void }) {
       await signUp(email, password, username, displayName);
       onLogin();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Signup failed');
+      const errorMessage = err instanceof Error ? err.message : 'Signup failed';
+      if (errorMessage.includes('Database not initialized') || errorMessage.includes('PGRST205')) {
+        setError('Database not initialized. Please visit /init-db to set up your database first.');
+        setTimeout(() => {
+          window.location.href = '/init-db';
+        }, 2000);
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setLoading(false);
     }

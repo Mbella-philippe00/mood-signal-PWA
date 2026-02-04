@@ -1,8 +1,9 @@
 'use client';
 
-import { Copy, MessageCircle, Phone, LogOut } from 'lucide-react';
+import { Copy, MessageCircle, Phone, LogOut, UserPlus, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuth } from './auth-context';
+import { NotificationsBell } from './notifications-bell';
 
 interface PartnerDashboardScreenProps {
   onNavigate: (screen: string) => void;
@@ -123,20 +124,50 @@ export function PartnerDashboardScreen({
       {/* Header */}
       <div className="sticky top-0 z-40 px-6 py-4 bg-background/95 backdrop-blur border-b border-border flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-foreground">Partner's Mood</h1>
-          {selectedCouple && (
+          <h1 className="text-lg font-semibold text-foreground">Mood Signal</h1>
+          {!selectedCouple ? (
+            <p className="text-xs text-muted-foreground mt-1">No partner connected yet</p>
+          ) : (
             <p className="text-xs text-muted-foreground mt-1">
-              {selectedCouple.couple_name}
+              {selectedCouple.couple_name || 'Connected'}
             </p>
           )}
         </div>
-        <button
-          onClick={handleSignOut}
-          className="p-2 hover:bg-muted rounded-lg transition-colors"
-          title="Sign out"
-        >
-          <LogOut className="w-5 h-5 text-foreground" />
-        </button>
+        <div className="flex items-center gap-2">
+          <NotificationsBell onInvitationClick={() => onNavigate('invitations')} />
+          {!selectedCouple && (
+            <button
+              onClick={() => onNavigate('add-partner')}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              title="Add partner"
+            >
+              <UserPlus className="w-5 h-5 text-primary" />
+            </button>
+          )}
+          {selectedCouple && (
+            <button
+              onClick={() => onNavigate('add-partner')}
+              className="p-2 hover:bg-muted rounded-lg transition-colors"
+              title="Add another partner"
+            >
+              <UserPlus className="w-5 h-5 text-foreground opacity-50" />
+            </button>
+          )}
+          <button
+            onClick={() => onNavigate('invitations')}
+            className="p-2 hover:bg-muted rounded-lg transition-colors relative"
+            title="Invitations"
+          >
+            <Mail className="w-5 h-5 text-foreground" />
+          </button>
+          <button
+            onClick={handleSignOut}
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
+            title="Sign out"
+          >
+            <LogOut className="w-5 h-5 text-foreground" />
+          </button>
+        </div>
       </div>
 
       {/* Content */}

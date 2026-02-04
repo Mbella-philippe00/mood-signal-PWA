@@ -5,14 +5,17 @@ import { LoginScreen } from '@/components/login-screen';
 import { PartnerDashboardScreen } from '@/components/partner-dashboard-screen';
 import { SendMoodScreen } from '@/components/send-mood-screen';
 import { HistoryScreen } from '@/components/history-screen';
+import { AddPartnerScreen } from '@/components/add-partner-screen';
+import { InvitationsScreen } from '@/components/invitations-screen';
 import { useAuth } from '@/components/auth-context';
 
-type Screen = 'login' | 'dashboard' | 'send' | 'history';
+type Screen = 'login' | 'dashboard' | 'send' | 'history' | 'add-partner' | 'invitations';
 
 export default function Home() {
   const { user, loading } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>('login');
   const [coupleId, setCoupleId] = useState<string | undefined>();
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -28,6 +31,7 @@ export default function Home() {
 
   const handleBack = () => {
     setCurrentScreen('dashboard');
+    setRefreshKey(prev => prev + 1);
   };
 
   if (loading) {
@@ -48,7 +52,11 @@ export default function Home() {
       )}
 
       {currentScreen === 'dashboard' && user && (
-        <PartnerDashboardScreen onNavigate={handleNavigate} onCoupleSelect={setCoupleId} />
+        <PartnerDashboardScreen 
+          onNavigate={handleNavigate} 
+          onCoupleSelect={setCoupleId}
+          key={refreshKey}
+        />
       )}
 
       {currentScreen === 'send' && user && (
@@ -57,6 +65,14 @@ export default function Home() {
 
       {currentScreen === 'history' && user && (
         <HistoryScreen onBack={handleBack} coupleId={coupleId} />
+      )}
+
+      {currentScreen === 'add-partner' && user && (
+        <AddPartnerScreen onBack={handleBack} onPartnerAdded={handleBack} />
+      )}
+
+      {currentScreen === 'invitations' && user && (
+        <InvitationsScreen onBack={handleBack} onInvitationHandled={handleBack} />
       )}
     </main>
   );
